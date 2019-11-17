@@ -556,7 +556,8 @@ int main(int argc, char **argv)
   while (it <= num_iterations)
   {
     //This for loop resets the forces acting on the asteroids for each iteration
-    for (int i = 0; i - num_asteroids; ++i)
+    #pragma omp parallel for
+    for (int i = 0; i < num_asteroids; ++i)
     { //si parallel
       asteroids[i].setxForce(0);
       asteroids[i].setyForce(0);
