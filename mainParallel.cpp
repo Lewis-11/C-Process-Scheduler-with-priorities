@@ -565,9 +565,8 @@ int main(int argc, char **argv)
     // stepFile << "******* ITERATION *******" << "\n";
     // stepFile << "--- asteroids vs asteroids --- " << "\n";
 
-    //NO PARECE QUE AHORRE TIEMPO
-
-#pragma omp parallel for ordered
+//SI PONES ESTE PARALELO CON LOS CRITICALS SALE DIFERENTE. Y ENCIMA TARDA MÁS
+// #pragma omp parallel for ordered
     for (int i = 0; i < num_asteroids; ++i)
     {
       for (int j = i + 1; j < num_asteroids; ++j)
@@ -577,13 +576,13 @@ int main(int argc, char **argv)
         // stepFile << "XForce: " << i << "\t" << j << "\t" << iXForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
         // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
         // #pragma omp critical
-        asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
-        // #pragma omp critical
-        asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
-        // #pragma omp critical
         asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
         // #pragma omp critical
         asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
+        // #pragma omp critical
+        asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
+        // #pragma omp critical
+        asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
       }
     }
 

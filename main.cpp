@@ -488,15 +488,15 @@ int main(int argc, char ** argv){
 
   //opening solution file
   std::ofstream outFile;
-  outFile.open("out.txt", std::ofstream::out);
+  outFile.open("out_seq.txt", std::ofstream::out);
   outFile << std::fixed;
   outFile << std::setprecision(3);
 
   //opening step by step file
-  std::ofstream stepFile;
-  stepFile.open("step_by_step.txt", std::ofstream::out);
-  stepFile << std::fixed;
-  stepFile << std::setprecision(3);
+  // std::ofstream stepFile;
+  // stepFile.open("step_by_step.txt", std::ofstream::out);
+  // stepFile << std::fixed;
+  // stepFile << std::setprecision(3);
 
 
   //Iterations
@@ -508,15 +508,15 @@ int main(int argc, char ** argv){
         asteroids[i].setyForce(0);
         
       }
-      stepFile << "******* ITERATION *******" << "\n";
-      stepFile << "--- asteroids vs asteroids --- " << "\n";
+      // stepFile << "******* ITERATION *******" << "\n";
+      // stepFile << "--- asteroids vs asteroids --- " << "\n";
 
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
           double iYForceJ = aForceY(asteroids[i], asteroids[j]);
-          stepFile << "XForce: " << i << "\t" << j << "\t" << iXForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
-          stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
+          // stepFile << "XForce: " << i << "\t" << j << "\t" << iXForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
+          // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
           asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
@@ -524,16 +524,16 @@ int main(int argc, char ** argv){
         }
       }
 
-      stepFile << "--- asteroids vs planets --- " << "\n";
+      // stepFile << "--- asteroids vs planets --- " << "\n";
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = 0; j< num_planets; ++j){
-          stepFile << "XForce: " << i << "\t" << j << "\t" << aForceX(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
-          stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
+          // stepFile << "XForce: " << i << "\t" << j << "\t" << aForceX(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
+          // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + aForceX(asteroids[i], planets[j]));
           asteroids[i].setyForce(asteroids[i].getyForce() + aForceY(asteroids[i], planets[j]));
         }
       }
-      stepFile << "\n";
+      // stepFile << "\n";
 
 
 
@@ -562,6 +562,6 @@ int main(int argc, char ** argv){
   }
 
   outFile.close();
-  stepFile.close();
+  // stepFile.close();
   return 0;
 }
