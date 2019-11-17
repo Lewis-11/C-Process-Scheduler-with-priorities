@@ -565,7 +565,7 @@ int main(int argc, char **argv)
     // stepFile << "******* ITERATION *******" << "\n";
     // stepFile << "--- asteroids vs asteroids --- " << "\n";
 
-//SI PONES ESTE PARALELO CON LOS CRITICALS SALE DIFERENTE. Y ENCIMA TARDA MÁS
+//SI PONES ESTE PARALELO CON LOS CRITICALS SALE DIFERENTE, Y ENCIMA TARDA MÁS
 // #pragma omp parallel for ordered
     for (int i = 0; i < num_asteroids; ++i)
     {
