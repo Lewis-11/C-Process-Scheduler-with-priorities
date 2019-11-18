@@ -21,7 +21,7 @@
 #include <math.h>
 #include <algorithm>
 #include <iomanip>
-
+#include <chrono>
 
 //Global variables, dimensions of space and constants
 const double width = 200;
@@ -236,7 +236,7 @@ double dist (const Asteroid &a, const Planet &b){
 
 
 double slope ( const Asteroid &a, const Asteroid &b){
-  double output = ( a.getyPos() -b.getyPos())/(a.getxPos()-b.getxPos());
+  double output = ( a.getyPos()-b.getyPos())/(a.getxPos()-b.getxPos());
   if(output>1){
     output = 1;
   }
@@ -387,7 +387,6 @@ void checkCollisions(Asteroid* a, Asteroid* b){
     (*b).setxVel(velXA);
     (*b).setyVel(velYA);
   }
-
 }
 
 /**
@@ -405,6 +404,7 @@ void checkCollisions(Asteroid* a, Asteroid* b){
 
 int main(int argc, char ** argv){
 
+  auto t1 = std::chrono::high_resolution_clock::now();
 
 
 
@@ -446,7 +446,7 @@ int main(int argc, char ** argv){
   std::ofstream initFile;
   initFile.open("init_conf.txt", std::ofstream::out);
   initFile << std::fixed;
-  initFile << std::setprecision(3);
+  // initFile << std::setprecision(3);
 
   for(int i = 1; i<argc; ++i){
     initFile << argv[i] << "\t";
@@ -492,11 +492,11 @@ int main(int argc, char ** argv){
   outFile << std::fixed;
   outFile << std::setprecision(3);
 
-  //opening step by step file
-  // std::ofstream stepFile;
-  // stepFile.open("step_by_step.txt", std::ofstream::out);
+  // opening step by step file
+  std::ofstream stepFile;
+  stepFile.open("step_by_step_seq.txt", std::ofstream::out);
   // stepFile << std::fixed;
-  // stepFile << std::setprecision(3);
+  stepFile.precision(6);
 
 
   //Iterations
@@ -508,32 +508,32 @@ int main(int argc, char ** argv){
         asteroids[i].setyForce(0);
         
       }
-      // stepFile << "******* ITERATION *******" << "\n";
-      // stepFile << "--- asteroids vs asteroids --- " << "\n";
+      if (it>=2){
+        stepFile << "******************** ITERATION *******************" << "\n";
+      }
+      stepFile << "--- asteroids vs asteroids ---" << "\n";
 
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
           double iYForceJ = aForceY(asteroids[i], asteroids[j]);
-          // stepFile << "XForce: " << i << "\t" << j << "\t" << iXForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
+          stepFile << i << " " << j << " " << iXForceJ/cos(slope(asteroids[i], asteroids[j])) <<" " << slope(asteroids[i], asteroids[j]) << "\n";
           // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
-          asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
-          asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
         }
       }
 
-      // stepFile << "--- asteroids vs planets --- " << "\n";
-      for(int i = 0; i<num_asteroids; ++i){
-        for(int j = 0; j< num_planets; ++j){
-          // stepFile << "XForce: " << i << "\t" << j << "\t" << aForceX(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
+      stepFile << "--- asteroids vs planets --- " << "\n";
+      for(int i = 0; i<num_planets; ++i){
+        for(int j = 0; j< num_asteroids; ++j){
+          stepFile << i << " " << j << " " << aForceX(asteroids[j], planets[i])/cos(slope(asteroids[j], planets[i])) <<" " << slope(asteroids[j], planets[i]) << "\n";
           // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
-          asteroids[i].setxForce(asteroids[i].getxForce() + aForceX(asteroids[i], planets[j]));
-          asteroids[i].setyForce(asteroids[i].getyForce() + aForceY(asteroids[i], planets[j]));
+          asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[j], planets[i]));
+          asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[j], planets[i]));
         }
       }
-      // stepFile << "\n";
+      stepFile << "\n";
 
 
 
@@ -562,6 +562,12 @@ int main(int argc, char ** argv){
   }
 
   outFile.close();
-  // stepFile.close();
+  stepFile.close();
+
+
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto dif = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
+  std::cout << dif.count() << std::endl;
+  
   return 0;
 }
