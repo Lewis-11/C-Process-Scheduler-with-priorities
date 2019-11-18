@@ -520,8 +520,8 @@ int main(int argc, char ** argv){
           // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
-          asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
-          asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
+          asteroids[j].setxForce(asteroids[j].getxForce() + iXForceJ);
+          asteroids[j].setyForce(asteroids[j].getyForce() + iYForceJ);
         }
       }
 
