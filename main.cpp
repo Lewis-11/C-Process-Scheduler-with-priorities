@@ -261,7 +261,7 @@ double slope ( const Asteroid &a, const Planet &b){
   if(output>1){
     output = 1;
   }
-  
+
   if(output<-1){
     output=-1;
   }
@@ -497,7 +497,7 @@ int main(int argc, char ** argv){
   std::ofstream stepFile;
   stepFile.open("step_by_step_seq.txt", std::ofstream::out);
   // stepFile << std::fixed;
-  stepFile.precision(6);
+
 
 
   //Iterations
