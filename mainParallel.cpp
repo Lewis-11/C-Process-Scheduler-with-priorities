@@ -250,8 +250,7 @@ double dist(const Asteroid &a, const Asteroid &b)
  * @return the distance in between two objects
  * */
 
-double dist(const Asteroid &a, const Planet &b)
-{
+double dist(const Asteroid &a, const Planet &b){
   return sqrt(pow(a.getxPos() - b.getxPos(), 2) + pow(a.getyPos() - b.getyPos(), 2));
 }
 
@@ -640,4 +639,6 @@ int main(int argc, char **argv)
   std::cout << dif.count() << std::endl;
   
   return 0;
+
+  //hola
 }
