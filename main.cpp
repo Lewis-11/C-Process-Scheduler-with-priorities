@@ -261,6 +261,7 @@ double slope ( const Asteroid &a, const Planet &b){
   if(output>1){
     output = 1;
   }
+  
   if(output<-1){
     output=-1;
   }
