@@ -21,7 +21,7 @@
 #include <math.h>
 #include <algorithm>
 #include <iomanip>
-
+#include <chrono>
 
 //Global variables, dimensions of space and constants
 const double width = 200;
@@ -405,6 +405,7 @@ void checkCollisions(Asteroid* a, Asteroid* b){
 
 int main(int argc, char ** argv){
 
+  auto t1 = std::chrono::high_resolution_clock::now();
 
 
 
@@ -563,5 +564,11 @@ int main(int argc, char ** argv){
 
   outFile.close();
   // stepFile.close();
+
+
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto dif = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
+  std::cout << dif.count() << std::endl;
+  
   return 0;
 }
