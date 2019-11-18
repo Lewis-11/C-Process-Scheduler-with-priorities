@@ -1,6 +1,6 @@
 /**
 * Final Parallel Programming Project
-* @author Ignacio Talavera Cepeda ()
+* @author Ignacio Talavera Cepeda (100383487)
 * @author Luis Rodríguez Rubio (100383365)
 * @author Eusebio Ricardo Carmona Milara (100383488)
 * Date: 09/11/2019

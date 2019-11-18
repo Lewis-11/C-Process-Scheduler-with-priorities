@@ -1,6 +1,6 @@
 /**
 * Final Parallel Programming Project
-* @author Ignacio Talavera Cepeda ()
+* @author Ignacio Talavera Cepeda (100383487)
 * @author Luis Rodríguez Rubio (100383365)
 * @author Eusebio Ricardo Carmona Milara (100383488)
 * Date: 09/11/2019
@@ -274,7 +274,6 @@ double slope ( const Asteroid &a, const Planet &b){
  * @return the attraction force value in between objects a and b capped at 100
  * */
 
-
 double aForceX(const Asteroid &a, const Asteroid &b){
   double angle = slope(a, b);
   double distance = dist(a,b);
@@ -489,7 +488,7 @@ int main(int argc, char ** argv){
 
   //opening solution file
   std::ofstream outFile;
-  outFile.open("out_seq.txt", std::ofstream::out);
+  outFile.open("out_seq_nuestro.txt", std::ofstream::out);
   outFile << std::fixed;
   outFile << std::setprecision(3);
 
@@ -522,6 +521,8 @@ int main(int argc, char ** argv){
           // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
+          asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
+          asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
         }
       }
 
