@@ -511,27 +511,31 @@ int main(int argc, char ** argv){
         asteroids[i].setyForce(0);
         
       }
-      if (it>=2){
-        // stepFile << "******************** ITERATION *******************" << "\n";
-      }
       // stepFile << "--- asteroids vs asteroids ---" << "\n";
-
+      
       for(int i = 0; i<num_asteroids; ++i){
+        #pragma omp parallel for ordered
         for(int j = i+1; j< num_asteroids; ++j){
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
           double iYForceJ = aForceY(asteroids[i], asteroids[j]);
           // stepFile << i << " " << j << " " << iXForceJ/cos(slope(asteroids[i], asteroids[j])) <<" " << slope(asteroids[i], asteroids[j]) << "\n";
           // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
+          #pragma omp critical
+          {
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
+          }
           asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
           asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
         }
       }
 
       // stepFile << "--- asteroids vs planets --- " << "\n";
-      #pragma omp parallel for ordered
+
+      //Este for paralelo está dando problemas
+      
       for(int i = 0; i<num_planets; ++i){
+        #pragma omp parallel for ordered
         for(int j = 0; j< num_asteroids; ++j){
           // stepFile << i << " " << j << " " << aForceX(asteroids[j], planets[i])/cos(slope(asteroids[j], planets[i])) <<" " << slope(asteroids[j], planets[i]) << "\n";
           // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
@@ -547,7 +551,6 @@ int main(int argc, char ** argv){
         refreshAcc(&asteroids[i]);
         refreshVel(&asteroids[i]);
         refreshPositions(&asteroids[i]);
-
         for (int j = i+1; j<num_asteroids; ++j){
           checkCollisions(&asteroids[i], &asteroids[j]);
         }
