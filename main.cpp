@@ -493,9 +493,10 @@ int main(int argc, char ** argv){
   outFile << std::setprecision(3);
 
   // opening step by step file
-  std::ofstream stepFile;
-  stepFile.open("step_by_step_seq.txt", std::ofstream::out);
-  // stepFile << std::fixed;
+
+  // std::ofstream stepFile;
+  // stepFile.open("step_by_step_seq.txt", std::ofstream::out);
+  // // stepFile << std::fixed;
 
 
 
@@ -509,15 +510,15 @@ int main(int argc, char ** argv){
         
       }
       if (it>=2){
-        stepFile << "******************** ITERATION *******************" << "\n";
+        // stepFile << "******************** ITERATION *******************" << "\n";
       }
-      stepFile << "--- asteroids vs asteroids ---" << "\n";
+      // stepFile << "--- asteroids vs asteroids ---" << "\n";
 
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
           double iYForceJ = aForceY(asteroids[i], asteroids[j]);
-          stepFile << i << " " << j << " " << iXForceJ/cos(slope(asteroids[i], asteroids[j])) <<" " << slope(asteroids[i], asteroids[j]) << "\n";
+          // stepFile << i << " " << j << " " << iXForceJ/cos(slope(asteroids[i], asteroids[j])) <<" " << slope(asteroids[i], asteroids[j]) << "\n";
           // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
@@ -526,16 +527,16 @@ int main(int argc, char ** argv){
         }
       }
 
-      stepFile << "--- asteroids vs planets --- " << "\n";
+      // stepFile << "--- asteroids vs planets --- " << "\n";
       for(int i = 0; i<num_planets; ++i){
         for(int j = 0; j< num_asteroids; ++j){
-          stepFile << i << " " << j << " " << aForceX(asteroids[j], planets[i])/cos(slope(asteroids[j], planets[i])) <<" " << slope(asteroids[j], planets[i]) << "\n";
+          // stepFile << i << " " << j << " " << aForceX(asteroids[j], planets[i])/cos(slope(asteroids[j], planets[i])) <<" " << slope(asteroids[j], planets[i]) << "\n";
           // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
           asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[j], planets[i]));
           asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[j], planets[i]));
         }
       }
-      stepFile << "\n";
+      // stepFile << "\n";
 
 
 
@@ -564,7 +565,7 @@ int main(int argc, char ** argv){
   }
 
   outFile.close();
-  stepFile.close();
+  // stepFile.close();
 
 
   auto t2 = std::chrono::high_resolution_clock::now();
