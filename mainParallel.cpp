@@ -3,8 +3,8 @@
 * @author Ignacio Talavera Cepeda (100383487)
 * @author Luis Rodríguez Rubio (100383365)
 * @author Eusebio Ricardo Carmona Milara (100383488)
-* Date: 09/11/2019
-* @version: 1.0
+* Date: 19/11/2019
+* @version: 2.0
 * Computer Architecture
 * Computer Science and Engineering
 * Universidad Carlos III de Madrid
@@ -21,8 +21,8 @@
 #include <math.h>
 #include <algorithm>
 #include <iomanip>
-#include <omp.h>
 #include <chrono>
+#include <omp.h>
 
 //Global variables, dimensions of space and constants
 const double width = 200;
@@ -32,204 +32,178 @@ const double DELTA_T = 0.1;
 const double MIN_DIS = 5.0;
 const double mass = 1000;
 const double sdm = 50;
-//!COMMENT PUT GRAVITY, DELTA_T AND MIN_DIS, OTHERWISE THE COMPILER WILL COMPLAIN
 
-class Asteroid
-{
-private:
-  double mass;
-  double x_pos;
-  double y_pos;
-  double x_vel;
-  double y_vel;
-  double x_force;
-  double y_force;
-  double x_acc;
-  double y_acc;
 
-  //neither acceleration nor force is a persistent data, it is only used to calculate the next position. We decided not to store it as a parameter.
+class Asteroid {
+  private:
+    double mass;
+    double x_pos;
+    double y_pos;
+    double x_vel;
+    double y_vel;
+    double x_force;
+    double y_force;
+    double x_acc;
+    double y_acc;
 
-public:
-  //Constructor
-  Asteroid(double m, double x, double y)
-  {
-    mass = m;
-    x_pos = x;
-    y_pos = y;
-    x_vel = 0;
-    y_vel = 0;
-    x_force = 0;
-    y_force = 0;
-    x_acc = 0;
-    y_acc = 0;
+    //neither acceleration nor force is a persistent data, it is only used to calculate the next position. We decided not to store it as a parameter.
 
-    //we are trusting the normal distribution to send correct coordinates
-  }
+  public:
+    //Constructor
+    Asteroid(double m, double x, double y){
+      mass=m;
+      x_pos=x;
+      y_pos=y;
+      x_vel=0;
+      y_vel=0;
+      x_force=0;
+      y_force=0;
+      x_acc=0;
+      y_acc=0;
 
-  //Destructor       -----------------needs to be fixed
-  //~Asteroids();
-
-  //Setters
-  double setxPos(double x)
-  {
-    if (x < 0 || x > width)
-    {
-      std::cerr << "x coordinate is invalid, it must be between 0 and " << width << std::endl;
-      return -1;
+      //we are trusting the normal distribution to send correct coordinates
     }
-    x_pos = x;
-    return 0;
-  }
 
-  double setyPos(double y)
-  {
-    if (y < 0 || y > height)
-    {
-      std::cerr << "y coordinate is invalid, it must be between 0 and " << height << std::endl;
-      return -1;
+    //Destructor       -----------------needs to be fixed
+    //~Asteroids();
+
+    //Setters
+    double setxPos(double x){
+      if(x<0 || x>width){
+        std::cerr <<"x coordinate is invalid, it must be between 0 and " << width << std::endl;
+        return -1;
+      }
+      x_pos=x;
+      return 0;
     }
-    y_pos = y;
-    return 0;
-  }
 
-  double setxVel(double xv)
-  {
-    x_vel = xv;
-    return 0;
-  }
+    double setyPos(double y){
+      if(y<0 || y>height){
+        std::cerr <<"y coordinate is invalid, it must be between 0 and " << height << std::endl;
+        return -1;
+      }
+      y_pos=y;
+      return 0;
+    }
 
-  double setyVel(double yv)
-  {
-    y_vel = yv;
-    return 0;
-  }
+    double setxVel(double xv){
+      x_vel=xv;
+      return 0;
+    }
 
-  double setxForce(double xf)
-  {
-    x_force = xf;
-    return 0;
-  }
+    double setyVel(double yv){
+      y_vel=yv;
+      return 0;
+    }
 
-  double setyForce(double yf)
-  {
-    y_force = yf;
-    return 0;
-  }
-  double setxAcc(double xa)
-  {
-    x_acc = xa;
-    return 0;
-  }
+    double setxForce(double xf){
+      x_force=xf;
+      return 0;
+    }
 
-  double setyAcc(double ya)
-  {
-    y_acc = ya;
-    return 0;
-  }
+    double setyForce(double yf){
+      y_force=yf;
+      return 0;
+    }
+    double setxAcc(double xa){
+      x_acc=xa;
+      return 0;
+    }
 
-  //Getters
-  double getMass() const
-  {
-    return mass;
-  }
+    double setyAcc(double ya){
+      y_acc=ya;
+      return 0;
+    }
 
-  double getxPos() const
-  {
-    return x_pos;
-  }
 
-  double getyPos() const
-  {
-    return y_pos;
-  }
 
-  double getxVel() const
-  {
-    return x_vel;
-  }
+    //Getters
+    double getMass() const{
+      return mass;
+    }
 
-  double getyVel() const
-  {
-    return y_vel;
-  }
+    double getxPos() const{
+      return x_pos;
+    }
 
-  double getxForce() const
-  {
-    return x_force;
-  }
-  double getyForce() const
-  {
-    return y_force;
-  }
-  double getxAcc() const
-  {
-    return x_acc;
-  }
-  double getyAcc() const
-  {
-    return y_acc;
-  }
+    double getyPos() const{
+      return y_pos;
+    }
+
+    double getxVel() const{
+      return x_vel;
+    }
+
+    double getyVel() const{
+      return y_vel;
+    }
+
+    double getxForce() const{
+      return x_force;
+    }
+    double getyForce() const{
+      return y_force;
+    }
+    double getxAcc() const{
+      return x_acc;
+    }
+    double getyAcc() const{
+      return y_acc;
+    }
 };
 
-class Planet
-{
-private:
-  double mass;
-  double x_pos;
-  double y_pos;
+class Planet{
+  private:
+    double mass;
+    double x_pos;
+    double y_pos;
 
-public:
-  //Constructor
-  Planet(double m, double x, double y)
-  {
-    mass = m;
-    x_pos = x;
-    y_pos = y;
-  }
 
-  //Destructor       -----------------needs to be fixed
-  //~Planet();
-
-  //Setters
-  int setxPos(double x)
-  {
-    if (x < 0 || x > width)
-    {
-      std::cerr << "x coordinate is invalid, it must be between 0 and " << width << std::endl;
-      return -1;
+  public:
+    //Constructor
+    Planet(double m, double x, double y){
+      mass=m;
+      x_pos=x;
+      y_pos=y;
     }
-    x_pos = x;
-    return 0;
-  }
 
-  int setyPos(double y)
-  {
-    if (y < 0 || y > height)
-    {
-      std::cerr << "y coordinate is invalid, it must be between 0 and " << height << std::endl;
-      return -1;
+    //Destructor       -----------------needs to be fixed
+    //~Planet();
+
+     //Setters
+    int setxPos(double x){
+      if(x<0 || x>width){
+        std::cerr <<"x coordinate is invalid, it must be between 0 and " << width << std::endl;
+        return -1;
+      }
+      x_pos=x;
+      return 0;
     }
-    y_pos = y;
-    return 0;
-  }
 
-  //Getters
-  double getMass() const
-  {
-    return mass;
-  }
+    int setyPos(double y){
+      if(y<0 || y>height){
+        std::cerr <<"y coordinate is invalid, it must be between 0 and " << height << std::endl;
+        return -1;
+      }
+      y_pos=y;
+      return 0;
+    }
 
-  double getxPos() const
-  {
-    return x_pos;
-  }
 
-  double getyPos() const
-  {
-    return y_pos;
-  }
+    //Getters
+    double getMass() const {
+      return mass;
+    }
 
-  //It is likely that changing any of these will not be neccesary, but anyway, setters and getters may come in handy
+    double getxPos() const {
+      return x_pos;
+    }
+
+    double getyPos() const{
+      return y_pos;
+    }
+
+    //It is likely that changing any of these will not be neccesary, but anyway, setters and getters may come in handy
 };
 
 /**
@@ -238,9 +212,8 @@ public:
  * @return the distance in between two objects
  * */
 
-double dist(const Asteroid &a, const Asteroid &b)
-{
-  return sqrt(pow(a.getxPos() - b.getxPos(), 2) + pow(a.getyPos() - b.getyPos(), 2));
+double dist (const Asteroid &a, const Asteroid &b){
+  return sqrt(pow(a.getxPos()-b.getxPos(),2)+pow(a.getyPos()-b.getyPos(),2));
 }
 
 /**
@@ -250,8 +223,8 @@ double dist(const Asteroid &a, const Asteroid &b)
  * @return the distance in between two objects
  * */
 
-double dist(const Asteroid &a, const Planet &b){
-  return sqrt(pow(a.getxPos() - b.getxPos(), 2) + pow(a.getyPos() - b.getyPos(), 2));
+double dist (const Asteroid &a, const Planet &b){
+  return sqrt(pow(a.getxPos()-b.getxPos(),2)+pow(a.getyPos()-b.getyPos(),2));
 }
 
 /**
@@ -262,16 +235,14 @@ double dist(const Asteroid &a, const Planet &b){
  * @return the angle of both objects
  * */
 
-double slope(const Asteroid &a, const Asteroid &b)
-{
-  double output = (a.getyPos() - b.getyPos()) / (a.getxPos() - b.getxPos());
-  if (output > 1)
-  {
+
+double slope ( const Asteroid &a, const Asteroid &b){
+  double output = ( a.getyPos()-b.getyPos())/(a.getxPos()-b.getxPos());
+  if(output>1){
     output = 1;
   }
-  if (output < -1)
-  {
-    output = -1;
+  if(output<-1){
+    output=-1;
   }
   return atan(output);
 }
@@ -285,16 +256,15 @@ double slope(const Asteroid &a, const Asteroid &b)
  * @return the angle of both objects
  * */
 
-double slope(const Asteroid &a, const Planet &b)
-{
-  double output = (a.getyPos() - b.getyPos()) / (a.getxPos() - b.getxPos());
-  if (output > 1)
-  {
+
+double slope ( const Asteroid &a, const Planet &b){
+  double output = ( a.getyPos() -b.getyPos())/(a.getxPos()-b.getxPos());
+  if(output>1){
     output = 1;
   }
-  if (output < -1)
-  {
-    output = -1;
+
+  if(output<-1){
+    output=-1;
   }
   return atan(output);
 }
@@ -305,31 +275,26 @@ double slope(const Asteroid &a, const Planet &b)
  * @return the attraction force value in between objects a and b capped at 100
  * */
 
-double aForceX(const Asteroid &a, const Asteroid &b)
-{
+double aForceX(const Asteroid &a, const Asteroid &b){
   double angle = slope(a, b);
-  double distance = dist(a, b);
-  if (distance > MIN_DIS)
-  {
-    double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(distance, 2);
-    return std::min(commonoperation * cos(angle), 100.0);
+  double distance = dist(a,b);
+  if (distance > MIN_DIS){
+    double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(distance,2);
+    return std::min(commonoperation*cos(angle),100.0);
   }
-  else
-    return 0;
+  else return 0;
 }
 
-double aForceY(const Asteroid &a, const Asteroid &b)
-{
+double aForceY(const Asteroid &a, const Asteroid &b){
   double angle = slope(a, b);
-  double distance = dist(a, b);
-  if (distance > MIN_DIS)
-  {
-    double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(distance, 2);
-    return std::min(commonoperation * sin(angle), 100.0);
+  double distance = dist(a,b);
+  if (distance > MIN_DIS){
+    double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(distance,2);
+    return std::min(commonoperation*sin(angle),100.0);
   }
-  else
-    return 0;
+  else return 0;
 }
+
 
 /**
  * Attraction force function DIVIDED VERSION
@@ -338,18 +303,17 @@ double aForceY(const Asteroid &a, const Asteroid &b)
  * @return the attraction force value in between objects a and b capped at 100
  * */
 
-double aForceX(const Asteroid &a, const Planet &b)
-{
+
+double aForceX(const Asteroid &a, const Planet &b){
   double angle = slope(a, b);
-  double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(dist(a, b), 2);
-  return std::min(commonoperation * cos(angle), 100.0);
+  double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(dist(a,b),2);
+  return std::min(commonoperation*cos(angle),100.0);
 }
 
-double aForceY(const Asteroid &a, const Planet &b)
-{
+double aForceY(const Asteroid &a, const Planet &b){
   double angle = slope(a, b);
-  double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(dist(a, b), 2);
-  return std::min(commonoperation * sin(angle), 100.0);
+  double commonoperation = GRAVITY * a.getMass() * b.getMass() / pow(dist(a,b),2);
+  return std::min(commonoperation*sin(angle),100.0);
 }
 /**
  * Acceleration force
@@ -358,10 +322,9 @@ double aForceY(const Asteroid &a, const Planet &b)
  * sets the correct acceleration in both axis for each of the asteroids
  * */
 
-void refreshAcc(Asteroid *a)
-{
-  (*a).setxAcc((*a).getxForce() / (*a).getMass());
-  (*a).setyAcc((*a).getyForce() / (*a).getMass());
+void refreshAcc (Asteroid* a) {
+    (*a).setxAcc((*a).getxForce()/(*a).getMass());
+    (*a).setyAcc((*a).getyForce()/(*a).getMass());
 }
 
 /**
@@ -371,10 +334,9 @@ void refreshAcc(Asteroid *a)
  * sets the correct speed in both axis for each of the asteroids
  * */
 
-void refreshVel(Asteroid *a)
-{
-  (*a).setxVel((*a).getxVel() + (*a).getxAcc() * DELTA_T);
-  (*a).setyVel((*a).getyVel() + (*a).getyAcc() * DELTA_T);
+void refreshVel(Asteroid* a){
+    (*a).setxVel((*a).getxVel() + (*a).getxAcc()*DELTA_T);
+    (*a).setyVel((*a).getyVel() + (*a).getyAcc()*DELTA_T);
 }
 
 /**
@@ -384,50 +346,41 @@ void refreshVel(Asteroid *a)
  * sets the correct speed in both axis for each of the asteroids
  * */
 
-void refreshPositions(Asteroid *a)
-{
+void refreshPositions(Asteroid* a){
   double x, y;
-  x = (*a).getxPos() + (*a).getxVel() * DELTA_T;
-  y = (*a).getyPos() + (*a).getyVel() * DELTA_T;
+    x = (*a).getxPos()+(*a).getxVel()*DELTA_T;
+    y = (*a).getyPos()+(*a).getyVel()*DELTA_T;
 
-  //Rebound checking
+    //Rebound checking
 
-  if (x <= 0)
-  {
-    (*a).setxPos(MIN_DIS);
-    (*a).setxVel((-1) * (*a).getxVel());
-  }
-  else if (x >= width)
-  {
-    (*a).setxPos(width - MIN_DIS);
-    (*a).setxVel((-1) * (*a).getxVel());
-  }
-  else
-  {
-    (*a).setxPos(x);
-  }
+    if (x<=0){
+      (*a).setxPos(MIN_DIS);
+      (*a).setxVel((-1)*(*a).getxVel());
+    }
+    else if (x>=width){
+      (*a).setxPos(width-MIN_DIS);
+      (*a).setxVel((-1)*(*a).getxVel());
+    }
+    else{
+      (*a).setxPos(x);
+    }
 
-  if (y <= 0)
-  {
-    (*a).setyPos(MIN_DIS);
-    (*a).setyVel((-1) * (*a).getyVel());
-  }
-  else if (y >= width)
-  {
-    (*a).setyPos(height - MIN_DIS);
-    (*a).setyVel((-1) * (*a).getyVel());
-  }
-  else
-  {
-    (*a).setyPos(y);
-  }
-  //ifs instead of else-ifs because of the corner cases
+    if (y<=0){
+      (*a).setyPos(MIN_DIS);
+      (*a).setyVel((-1)*(*a).getyVel());
+    }
+    else if (y>=width){
+      (*a).setyPos(height-MIN_DIS);
+      (*a).setyVel((-1)*(*a).getyVel());
+    }
+    else{
+      (*a).setyPos(y);
+    }
+    //ifs instead of else-ifs because of the corner cases
 }
 
-void checkCollisions(Asteroid *a, Asteroid *b)
-{
-  if (dist((*a), (*b)) <= MIN_DIS)
-  {
+void checkCollisions(Asteroid* a, Asteroid* b){
+  if (dist((*a),(*b)) <= MIN_DIS){
     double velXA = (*a).getxVel();
     double velYA = (*a).getyVel();
     (*a).setxVel((*b).getxVel());
@@ -450,19 +403,17 @@ void checkCollisions(Asteroid *a, Asteroid *b)
 * @return -1 in case of error, 0 otherwise
 */
 
-int main(int argc, char **argv)
-{
-    auto t1 = std::chrono::high_resolution_clock::now();
+int main(int argc, char ** argv){
+
+  auto t1 = std::chrono::high_resolution_clock::now();
+
+
 
   //Check correct number of parameters
-  if (!(argc == 5))
-  {
-    std::cerr << "nasteroids-seq: Wrong arguments."
-              << "\n"
-              << "Correct Use:"
-              << "\n"
-              << "nasteroids-seq num_asteroids num_iterations num_planets seed"
-              << "\n";
+  if( !(argc == 5)){
+    std::cerr << "nasteroids-seq: Wrong arguments." << "\n" << "Correct Use:"
+    << "\n" << "nasteroids-seq num_asteroids num_iterations num_planets seed"
+    << "\n";
     return -1;
   }
 
@@ -477,21 +428,18 @@ int main(int argc, char **argv)
   std::istringstream s4(argv[4]);
 
   //check operation and endOfFile flag to detect errors or incorrect argument types
-  if (!(s1 >> num_asteroids) || !(s2 >> num_iterations) || !(s3 >> num_planets) || !(s4 >> seed) || !s1.eof() || !s2.eof() || !s3.eof() || !s4.eof())
-  {
+  if (!(s1 >> num_asteroids) || !(s2 >> num_iterations) || !(s3 >> num_planets) || !(s4 >> seed)
+  ||!s1.eof() || !s2.eof() || !s3.eof() || !s4.eof()) {
 
-    std::cerr << "nasteroids-seq: Wrong arguments."
-              << "\n"
-              << "Correct Use:"
-              << "\n"
-              << "nasteroids-seq num_asteroids num_iterations num_planets seed"
-              << "\n";
+    std::cerr << "nasteroids-seq: Wrong arguments." << "\n" << "Correct Use:"
+    << "\n" << "nasteroids-seq num_asteroids num_iterations num_planets seed"
+    << "\n";
     return -1;
   }
 
   //Random distributions initialization
   std::default_random_engine re{seed};
-  std::uniform_real_distribution<double> ydist{0.0, std::nextafter(height, std::numeric_limits<double>::max())};
+    std::uniform_real_distribution<double> ydist{0.0, std::nextafter(height, std::numeric_limits<double>::max())};
   std::uniform_real_distribution<double> xdist{0.0, std::nextafter(width, std::numeric_limits<double>::max())};
   std::normal_distribution<double> mdist{mass, sdm};
 
@@ -499,148 +447,132 @@ int main(int argc, char **argv)
   std::ofstream initFile;
   initFile.open("init_conf.txt", std::ofstream::out);
   initFile << std::fixed;
-  initFile << std::setprecision(3);
+  // initFile << std::setprecision(3);
 
-  for (int i = 1; i < argc; ++i)
-  {
+  for(int i = 1; i<argc; ++i){
     initFile << argv[i] << "\t";
   }
   initFile << "\n";
 
-  std::vector<Asteroid> asteroids;
-  std::vector<Planet> planets;
-  for (int i = 0; i < num_asteroids; ++i)
-  {
+
+  std::vector <Asteroid> asteroids;
+  std::vector <Planet> planets;
+  for (int i=0 ; i<num_asteroids; ++i){
     double x = xdist(re);
     double y = ydist(re);
-    asteroids.push_back(Asteroid(mdist(re), x, y));
+    asteroids.push_back( Asteroid(mdist(re),x, y ) );
     //If the constructor is initialised directly with the random number generator,
     //the order of the coordinates is swapped
 
-    initFile << asteroids[i].getxPos() << "\t" << asteroids[i].getyPos() << "\t" << asteroids[i].getMass() << "\n";
+    initFile << asteroids[i].getxPos() << "\t" << asteroids[i].getyPos() << "\t" <<  asteroids[i].getMass() << "\n";
+
   }
 
-  //Planet initialization, placing it in each border
-  for (int i = 1; i <= num_planets; ++i)
-  {
-    if (i % 4 == 1)
-    {
-      planets.push_back(Planet(mdist(re) * 10, 0, ydist(re)));
+//Planet initialization, placing it in each border
+  for (int i=1; i<=num_planets; ++i){
+    if (i%4==1){
+      planets.push_back( Planet(mdist(re)*10, 0, ydist(re)) );
     }
-    else if (i % 4 == 2)
-    {
-      planets.push_back(Planet(mdist(re) * 10, xdist(re), 0));
+    else if (i%4==2){
+      planets.push_back( Planet(mdist(re)*10, xdist(re), 0) );
     }
-    else if (i % 4 == 3)
-    {
-      planets.push_back(Planet(mdist(re) * 10, width, ydist(re)));
+    else if (i%4==3){
+      planets.push_back( Planet(mdist(re)*10, width, ydist(re)) );
     }
-    else
-    {
-      planets.push_back(Planet(mdist(re) * 10, xdist(re), height));
+    else {
+      planets.push_back( Planet(mdist(re)*10, xdist(re), height) );
     }
-    initFile << planets[i - 1].getxPos() << "\t" << planets[i - 1].getyPos() << "\t" << planets[i - 1].getMass() << "\n";
+    initFile << planets[i-1].getxPos() << "\t" << planets[i-1].getyPos() << "\t" <<  planets[i-1].getMass() << "\n";
   }
 
   initFile.close();
 
-  // //opening step by step file
+  //opening solution file
+  std::ofstream outFile;
+  outFile.open("out_par_nuestro.txt", std::ofstream::out);
+  outFile << std::fixed;
+  outFile << std::setprecision(3);
+
+  // opening step by step file
+
   // std::ofstream stepFile;
-  // stepFile.open("step_by_step.txt", std::ofstream::out);
-  // stepFile << std::fixed;
-  // stepFile << std::setprecision(3);
+  // stepFile.open("step_by_step_seq.txt", std::ofstream::out);
+  // // stepFile << std::fixed;
+
+
 
   //Iterations
   int it = 1;
-  while (it <= num_iterations)
-  {
-    //This for loop resets the forces acting on the asteroids for each iteration
-    #pragma omp parallel for
-    for (int i = 0; i < num_asteroids; ++i)
-    { //si parallel
-      asteroids[i].setxForce(0);
-      asteroids[i].setyForce(0);
-    }
-    // stepFile << "******* ITERATION *******" << "\n";
-    // stepFile << "--- asteroids vs asteroids --- " << "\n";
-
-//SI PONES ESTE PARALELO CON LOS CRITICALS SALE DIFERENTE, Y ENCIMA TARDA MÁS
-// #pragma omp parallel for ordered
-    for (int i = 0; i < num_asteroids; ++i)
-    {
-      for (int j = i + 1; j < num_asteroids; ++j)
-      {
-        double iXForceJ = aForceX(asteroids[i], asteroids[j]);
-        double iYForceJ = aForceY(asteroids[i], asteroids[j]);
-        // stepFile << "XForce: " << i << "\t" << j << "\t" << iXForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
-        // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
-        // #pragma omp critical
-        asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
-        // #pragma omp critical
-        asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
-        // #pragma omp critical
-        asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
-        // #pragma omp critical
-        asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
+  while(it <= num_iterations){
+      //This for loop resets the forces acting on the asteroids for each iteration
+      #pragma omp parallel for
+      for(int i = 0; i<num_asteroids; ++i){
+        asteroids[i].setxForce(0);
+        asteroids[i].setyForce(0);
+        
       }
-    }
-
-// stepFile << "--- asteroids vs planets --- " << "\n";
-#pragma omp parallel for ordered
-    for (int i = 0; i < num_asteroids; ++i)
-    {
-      for (int j = 0; j < num_planets; ++j)
-      {
-        // stepFile << "XForce: " << i << "\t" << j << "\t" << aForceX(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
-        // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
-        asteroids[i].setxForce(asteroids[i].getxForce() + aForceX(asteroids[i], planets[j]));
-        asteroids[i].setyForce(asteroids[i].getyForce() + aForceY(asteroids[i], planets[j]));
+      if (it>=2){
+        // stepFile << "******************** ITERATION *******************" << "\n";
       }
-    }
-    // stepFile << "\n";
+      // stepFile << "--- asteroids vs asteroids ---" << "\n";
 
-// #pragma omp parallel for ordered
-    for (int i = 0; i < num_asteroids; ++i)
-    {
-      refreshAcc(&asteroids[i]);
-      refreshVel(&asteroids[i]);
-      refreshPositions(&asteroids[i]);
-
-      for (int j = i + 1; j < num_asteroids; ++j)
-      {
-        checkCollisions(&asteroids[i], &asteroids[j]);
+      for(int i = 0; i<num_asteroids; ++i){
+        for(int j = i+1; j< num_asteroids; ++j){
+          double iXForceJ = aForceX(asteroids[i], asteroids[j]);
+          double iYForceJ = aForceY(asteroids[i], asteroids[j]);
+          // stepFile << i << " " << j << " " << iXForceJ/cos(slope(asteroids[i], asteroids[j])) <<" " << slope(asteroids[i], asteroids[j]) << "\n";
+          // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
+          asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
+          asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
+          asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
+          asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
+        }
       }
-    }
-    
-    ++it;
+
+      // stepFile << "--- asteroids vs planets --- " << "\n";
+      #pragma omp parallel for ordered
+      for(int i = 0; i<num_planets; ++i){
+        for(int j = 0; j< num_asteroids; ++j){
+          // stepFile << i << " " << j << " " << aForceX(asteroids[j], planets[i])/cos(slope(asteroids[j], planets[i])) <<" " << slope(asteroids[j], planets[i]) << "\n";
+          // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
+          asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[j], planets[i]));
+          asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[j], planets[i]));
+        }
+      }
+      // stepFile << "\n";
+
+
+
+      for (int i = 0; i<num_asteroids; ++i){
+        refreshAcc(&asteroids[i]);
+        refreshVel(&asteroids[i]);
+        refreshPositions(&asteroids[i]);
+
+        for (int j = i+1; j<num_asteroids; ++j){
+          checkCollisions(&asteroids[i], &asteroids[j]);
+        }
+      }
+      ++it;
   }
 
-  //opening solution file
-  std::ofstream outFile;
-  outFile.open("out.txt", std::ofstream::out);
-  outFile << std::fixed;
-  outFile << std::setprecision(3);
   //Final data of asteroids
-  for (int i = 0; i < num_asteroids; ++i)
-  {
+  for(int i = 0; i< num_asteroids; ++i){
     double xpos = asteroids[i].getxPos();
     double ypos = asteroids[i].getyPos();
     double xvel = asteroids[i].getxVel();
     double yvel = asteroids[i].getyVel();
     double mass = asteroids[i].getMass();
     outFile << xpos << " " << ypos << " " << xvel << " " << yvel << " " << mass << "\n";
+
   }
 
-  
-  // stepFile.close();
   outFile.close();
+  // stepFile.close();
+
+
   auto t2 = std::chrono::high_resolution_clock::now();
   auto dif = std::chrono::duration_cast<std::chrono::microseconds>(t2-t1);
   std::cout << dif.count() << std::endl;
   
   return 0;
-
-
-
-
 }

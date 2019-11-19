@@ -47,5 +47,6 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "editor.fontFamily": "'Droid Sans', 'monospace', monospace, 'Droid Sans Fallback'"
 }

@@ -3,8 +3,8 @@
 * @author Ignacio Talavera Cepeda (100383487)
 * @author Luis Rodríguez Rubio (100383365)
 * @author Eusebio Ricardo Carmona Milara (100383488)
-* Date: 09/11/2019
-* @version: 1.0
+* Date: 19/11/2019
+* @version: 2.0
 * Computer Architecture
 * Computer Science and Engineering
 * Universidad Carlos III de Madrid
@@ -31,7 +31,7 @@ const double DELTA_T = 0.1;
 const double MIN_DIS = 5.0;
 const double mass = 1000;
 const double sdm = 50;
-//!COMMENT PUT GRAVITY, DELTA_T AND MIN_DIS, OTHERWISE THE COMPILER WILL COMPLAIN
+
 
 class Asteroid {
   private:
@@ -504,7 +504,7 @@ int main(int argc, char ** argv){
   int it = 1;
   while(it <= num_iterations){
       //This for loop resets the forces acting on the asteroids for each iteration
-      for(int i = 0; i-num_asteroids; ++i){
+      for(int i = 0; i<num_asteroids; ++i){
         asteroids[i].setxForce(0);
         asteroids[i].setyForce(0);
         
