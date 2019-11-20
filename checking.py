@@ -1,4 +1,4 @@
-nuestroFile=open("out_seq_nuestro.txt", "r")
+nuestroFile=open("out_seq.txt", "r")
 origFile=open("out.txt", "r")
 
 ourLines=nuestroFile.readlines()

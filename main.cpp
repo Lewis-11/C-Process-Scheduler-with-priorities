@@ -63,8 +63,6 @@ class Asteroid {
       //we are trusting the normal distribution to send correct coordinates
     }
 
-    //Destructor       -----------------needs to be fixed
-    //~Asteroids();
 
     //Setters
     double setxPos(double x){
@@ -165,9 +163,6 @@ class Planet{
       x_pos=x;
       y_pos=y;
     }
-
-    //Destructor       -----------------needs to be fixed
-    //~Planet();
 
      //Setters
     int setxPos(double x){
@@ -406,8 +401,6 @@ int main(int argc, char ** argv){
 
   auto t1 = std::chrono::high_resolution_clock::now();
 
-
-
   //Check correct number of parameters
   if( !(argc == 5)){
     std::cerr << "nasteroids-seq: Wrong arguments." << "\n" << "Correct Use:"
@@ -438,7 +431,7 @@ int main(int argc, char ** argv){
 
   //Random distributions initialization
   std::default_random_engine re{seed};
-    std::uniform_real_distribution<double> ydist{0.0, std::nextafter(height, std::numeric_limits<double>::max())};
+  std::uniform_real_distribution<double> ydist{0.0, std::nextafter(height, std::numeric_limits<double>::max())};
   std::uniform_real_distribution<double> xdist{0.0, std::nextafter(width, std::numeric_limits<double>::max())};
   std::normal_distribution<double> mdist{mass, sdm};
 
@@ -446,10 +439,10 @@ int main(int argc, char ** argv){
   std::ofstream initFile;
   initFile.open("init_conf.txt", std::ofstream::out);
   initFile << std::fixed;
-  // initFile << std::setprecision(3);
+  initFile << std::setprecision(3);
 
   for(int i = 1; i<argc; ++i){
-    initFile << argv[i] << "\t";
+    initFile << argv[i] << " ";
   }
   initFile << "\n";
 
@@ -463,7 +456,7 @@ int main(int argc, char ** argv){
     //If the constructor is initialised directly with the random number generator,
     //the order of the coordinates is swapped
 
-    initFile << asteroids[i].getxPos() << "\t" << asteroids[i].getyPos() << "\t" <<  asteroids[i].getMass() << "\n";
+    initFile << asteroids[i].getxPos() << " " << asteroids[i].getyPos() << " " <<  asteroids[i].getMass() << "\n";
 
   }
 
@@ -481,24 +474,22 @@ int main(int argc, char ** argv){
     else {
       planets.push_back( Planet(mdist(re)*10, xdist(re), height) );
     }
-    initFile << planets[i-1].getxPos() << "\t" << planets[i-1].getyPos() << "\t" <<  planets[i-1].getMass() << "\n";
+    initFile << planets[i-1].getxPos() << " " << planets[i-1].getyPos() << " " <<  planets[i-1].getMass() << " ";
   }
 
   initFile.close();
 
   //opening solution file
   std::ofstream outFile;
-  outFile.open("out_seq_nuestro.txt", std::ofstream::out);
+  outFile.open("out_seq.txt", std::ofstream::out);
   outFile << std::fixed;
   outFile << std::setprecision(3);
 
-  // opening step by step file
+  // step by step not generated for the performance tests
 
   // std::ofstream stepFile;
   // stepFile.open("step_by_step_seq.txt", std::ofstream::out);
   // // stepFile << std::fixed;
-
-
 
   //Iterations
   int it = 1;
@@ -507,13 +498,11 @@ int main(int argc, char ** argv){
       for(int i = 0; i<num_asteroids; ++i){
         asteroids[i].setxForce(0);
         asteroids[i].setyForce(0);
+        asteroids[i].setxAcc(0);
+        asteroids[i].setyAcc(0);
         
       }
-      if (it>=2){
-        // stepFile << "******************** ITERATION *******************" << "\n";
-      }
-      // stepFile << "--- asteroids vs asteroids ---" << "\n";
-
+      // --- asteroids vs asteroids ---
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
@@ -524,28 +513,27 @@ int main(int argc, char ** argv){
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
           asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
           asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
+          
+          
         }
-      }
-
-      // stepFile << "--- asteroids vs planets --- " << "\n";
-      for(int i = 0; i<num_planets; ++i){
+        // --- asteroids vs planets --- 
         for(int j = 0; j< num_asteroids; ++j){
-          // stepFile << i << " " << j << " " << aForceX(asteroids[j], planets[i])/cos(slope(asteroids[j], planets[i])) <<" " << slope(asteroids[j], planets[i]) << "\n";
-          // stepFile << "YForce: " << i << "\t" << j << "\t" << aForceY(asteroids[i], planets[j]) <<"\t" << slope(asteroids[i], planets[j]) << "\n";
           asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[j], planets[i]));
           asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[j], planets[i]));
         }
       }
-      // stepFile << "\n";
 
-
-
-
+      
+      //refresh of Acc, vel and positions
       for (int i = 0; i<num_asteroids; ++i){
         refreshAcc(&asteroids[i]);
         refreshVel(&asteroids[i]);
         refreshPositions(&asteroids[i]);
+      }
 
+      //Colision checking
+      
+      for (int i = 0; i<num_asteroids; ++i){
         for (int j = i+1; j<num_asteroids; ++j){
           checkCollisions(&asteroids[i], &asteroids[j]);
         }
