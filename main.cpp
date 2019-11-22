@@ -517,9 +517,9 @@ int main(int argc, char ** argv){
           
         }
         // --- asteroids vs planets --- 
-        for(int j = 0; j< num_asteroids; ++j){
-          asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[j], planets[i]));
-          asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[j], planets[i]));
+        for(int j = 0; j< num_planets; ++j){
+          asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[i], planets[j]));
+          asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[i], planets[j]));
         }
       }
 
