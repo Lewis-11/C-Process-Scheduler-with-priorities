@@ -2,7 +2,7 @@
 #The proportion between asteroids and planets is 70/30
 #Iterations are 50, 100, 200
 #Sum of asteroids and planets is 250, 500 and 1000
-g++ -std=c++14 -Wall -Wextra -Wno-deprecated -Werror -pedantic -pedantic-errors -O3 main.cpp -o main
+
 
 
 echo "---ITERATIONS: 50 ---"

@@ -518,7 +518,6 @@ int main(int argc, char ** argv){
 
           astforcesY[(index*i)+j-1] = iYForceJ;
           astforcesY[(index*j)+i] = -iYForceJ;
-
         }
         // --- asteroids vs planets --- 
         for(int j = 0; j< num_planets; ++j){

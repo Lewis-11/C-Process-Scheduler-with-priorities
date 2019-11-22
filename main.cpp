@@ -485,11 +485,6 @@ int main(int argc, char ** argv){
   outFile << std::fixed;
   outFile << std::setprecision(3);
 
-  // step by step not generated for the performance tests
-
-  // std::ofstream stepFile;
-  // stepFile.open("step_by_step_seq.txt", std::ofstream::out);
-  // // stepFile << std::fixed;
 
   //Iterations
   int it = 1;
@@ -507,8 +502,6 @@ int main(int argc, char ** argv){
         for(int j = i+1; j< num_asteroids; ++j){
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
           double iYForceJ = aForceY(asteroids[i], asteroids[j]);
-          // stepFile << i << " " << j << " " << iXForceJ/cos(slope(asteroids[i], asteroids[j])) <<" " << slope(asteroids[i], asteroids[j]) << "\n";
-          // stepFile << "YForce: " << i << "\t" << j << "\t" << iYForceJ <<"\t" << slope(asteroids[i], asteroids[j]) << "\n";
           asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
           asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
           asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
