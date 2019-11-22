@@ -16,5 +16,6 @@ else:
                 diff = diff*(-1)
             if diff>5.0:
                 print("problem found: " + ourdata[j] + " when orig was: " + theirdata[j] + " in line: " + str(i+1))
+                break
 
 
