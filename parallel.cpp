@@ -501,34 +501,24 @@ int main(int argc, char ** argv){
         
       }
       // --- asteroids vs asteroids ---
-      int size = pow(num_asteroids-1, 2);
+      int size = (num_asteroids-1) * num_asteroids;
       int sizepl = num_asteroids*num_planets;
       std::vector<double> astforcesX(size);
-      // astforcesX.reserve();
       std::vector<double> astforcesY(size);
-      // astforcesY.reserve(pow(num_asteroids-1, 2));
-
       std::vector<double> plforcesX(sizepl);
-      // plforcesX.reserve(sizepl);
       std::vector<double> plforcesY(sizepl);
-      // plforcesY.reserve(sizepl);
       #pragma omp parallel for
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           int index = num_asteroids-1;
           double iXForceJ = aForceX(asteroids[i], asteroids[j]);
           double iYForceJ = aForceY(asteroids[i], asteroids[j]);
-          astforcesX[index*i+j-1] = iXForceJ;
-          astforcesX[index*j+i] = (-1)*iXForceJ;
+          astforcesX[(index*i)+j-1] = iXForceJ;
+          astforcesX[(index*j)+i] = -iXForceJ;
 
-          astforcesY[index*i+j-1] = iYForceJ;
-          astforcesY[index*j+i] = (-1)*iYForceJ;
+          astforcesY[(index*i)+j-1] = iYForceJ;
+          astforcesY[(index*j)+i] = -iYForceJ;
 
-
-          // asteroids[i].setxForce(asteroids[i].getxForce() + iXForceJ);
-          // asteroids[i].setyForce(asteroids[i].getyForce() + iYForceJ);
-          // asteroids[j].setxForce(asteroids[j].getxForce() - iXForceJ);
-          // asteroids[j].setyForce(asteroids[j].getyForce() - iYForceJ);
         }
         // --- asteroids vs planets --- 
         for(int j = 0; j< num_planets; ++j){
@@ -538,20 +528,18 @@ int main(int argc, char ** argv){
           plforcesX[num_planets*i+j] = iXForceJ;
           plforcesY[num_planets*i+j] = iYForceJ;
 
-          // asteroids[j].setxForce(asteroids[j].getxForce() + aForceX(asteroids[i], planets[j]));
-          // asteroids[j].setyForce(asteroids[j].getyForce() + aForceY(asteroids[i], planets[j]));
         }
       }
-      //These for loops cannot be parallelised, since the calculation of the forces has to be performed sequentially
-      // for(unsigned int i = 0; i<astforcesX.size(); ++i){
-      //   asteroids[int(i / num_asteroids-1)].setxForce(asteroids[int(i / num_asteroids-1)].getxForce() + astforcesX[i]);
-      //   asteroids[int(i / num_asteroids-1)].setyForce(asteroids[int(i / num_asteroids-1)].getyForce() + astforcesY[i]);
-      // }
+      // These for loops cannot be parallelised, since the calculation of the forces has to be performed sequentially
+      for(unsigned int i = 0; i<astforcesX.size(); ++i){
+        asteroids[int(i / num_asteroids-1)].setxForce(asteroids[int(i / num_asteroids-1)].getxForce() + astforcesX[i]);
+        asteroids[int(i / num_asteroids-1)].setyForce(asteroids[int(i / num_asteroids-1)].getyForce() + astforcesY[i]);
+      }
       
-      // for(unsigned int i = 0; i<plforcesX.size(); ++i){
-      //   asteroids[int(i/num_planets)].setxForce(asteroids[int(i/num_planets)].getxForce() + plforcesX[i]);
-      //   asteroids[int(i/num_planets)].setyForce(asteroids[int(i/num_planets)].getyForce() + plforcesY[i]);
-      // }
+      for(unsigned int i = 0; i<plforcesX.size(); ++i){
+        asteroids[int(i/num_planets)].setxForce(asteroids[int(i/num_planets)].getxForce() + plforcesX[i]);
+        asteroids[int(i/num_planets)].setyForce(asteroids[int(i/num_planets)].getyForce() + plforcesY[i]);
+      }
 
       //refresh of Acc, vel and positions
       for (int i = 0; i<num_asteroids; ++i){
