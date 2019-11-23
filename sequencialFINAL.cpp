@@ -482,7 +482,7 @@ int main(int argc, char ** argv){
 
   //opening solution file
   std::ofstream outFile;
-  outFile.open("out_par.txt", std::ofstream::out);
+  outFile.open("out_seq.txt", std::ofstream::out);
   outFile << std::fixed;
   outFile << std::setprecision(3);
 
