@@ -20,7 +20,7 @@ echo "---"
 
 for i in {0..14}
 do
-    ./parallel 700 50 30 6
+    ./parallel 700 50 300 6
 done
 echo "---"
 
@@ -39,7 +39,7 @@ echo "---"
 
 for i in {0..14}
 do
-    ./parallel 700 100 30 6
+    ./parallel 700 100 300 6
 done
 echo "---"
 
@@ -58,8 +58,8 @@ echo "---"
 
 for i in {0..14}
 do
-    ./parallel 700 200 30 6
+    ./parallel 700 200 300 6
 done
 echo "---"
 
-echo "Dale Carla, ahora mostráme aunque sea una mijita de pezón"
+echo "Te quiero fernando tu eres mi parsero"

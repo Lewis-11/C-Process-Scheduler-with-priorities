@@ -20,7 +20,7 @@ echo "---"
 
 for i in {0..14}
 do
-    ./main 700 50 30 6
+    ./main 700 50 300 6
 done
 echo "---"
 
@@ -39,7 +39,7 @@ echo "---"
 
 for i in {0..14}
 do
-    ./main 700 100 30 6
+    ./main 700 100 300 6
 done
 echo "---"
 
@@ -58,7 +58,7 @@ echo "---"
 
 for i in {0..14}
 do
-    ./main 700 200 30 6
+    ./main 700 200 300 6
 done
 echo "---"
 
