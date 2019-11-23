@@ -507,7 +507,7 @@ int main(int argc, char ** argv){
       std::vector<double> astforcesY(size);
       std::vector<double> plforcesX(sizepl);
       std::vector<double> plforcesY(sizepl);
-      #pragma omp parallel for     
+
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           int index = num_asteroids-1;
