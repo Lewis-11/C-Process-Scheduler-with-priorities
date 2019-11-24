@@ -493,8 +493,8 @@ int main(int argc, char ** argv){
   int it = 1;
   while(it <= num_iterations){
       //This for loop resets the forces acting on the asteroids for each iteration
-
-      #pragma omp parallel for 
+      omp_set_dynamic(0);
+      #pragma omp parallel for num_threads (8) schedule (guided)
       for(int i = 0; i<num_asteroids; ++i){
         
         asteroids[i].setxForce(0);
@@ -511,8 +511,8 @@ int main(int argc, char ** argv){
       std::vector<double> plforcesX(sizepl);
       std::vector<double> plforcesY(sizepl);
       
-      
-      #pragma omp parallel for 
+      omp_set_dynamic(0);
+      #pragma omp parallel for num_threads (8) schedule (guided)
       for(int i = 0; i<num_asteroids; ++i){
         for(int j = i+1; j< num_asteroids; ++j){
           
@@ -549,7 +549,8 @@ int main(int argc, char ** argv){
 
       //refresh of Acc, vel and positions
       
-      #pragma omp parallel for 
+      omp_set_dynamic(0);
+      #pragma omp parallel for num_threads (8) schedule (guided)
       for (int i = 0; i<num_asteroids; ++i){
         
         refreshAcc(&asteroids[i]);
